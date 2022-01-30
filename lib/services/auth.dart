@@ -5,16 +5,43 @@ class Auth {
 
   Auth({required this.auth});
 
-  Stream<User?> get user => auth.authStateChanges();
+  Stream<User?> get user => auth.userChanges();
 
-  Future<String> createAccount(String email, String password) async {
+  Future<String> createAccount({required String email, required String password}) async {
     try {
       await auth.createUserWithEmailAndPassword(
         email: email.trim(),
         password: password.trim(),
       );
       return "Success";
-    }on FirebaseAuthException catch (e) {
+    } on FirebaseAuthException catch (e) {
+      return e.message.toString();
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<String> signIn({required String email, required String password}) async {
+    try {
+      await auth.signInWithEmailAndPassword(
+        email: email.trim(),
+        password: password.trim(),
+      );
+      return "Success";
+    } on FirebaseAuthException catch (e) {
+      return e.message.toString();
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<String> signOut() async {
+    try {
+      await auth.signOut();
+      return "Success";
+    } on FirebaseAuthException catch (e) {
+      return e.message.toString();
+    } catch (e) {
       rethrow;
     }
   }
